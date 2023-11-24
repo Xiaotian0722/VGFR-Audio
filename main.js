@@ -3,11 +3,12 @@ let currentLevel = 0;
 let musicPlayed1 = false;
 let musicPlayed2 = false;
 let musicPlayed3 = false;
+let playing0 = false;
 let playing1 = false;
 let playing2 = false;
 let playing3 = false;
 
-var show = true;
+var show0 = true;
 var show1 = true;
 var show2 = true;
 var show3 = true;
@@ -45,31 +46,32 @@ var wind1, wind2, wind3;
 var bird1, bird2, bird3;
 var music1, music2, music3;
 
-document.getElementById('sound').addEventListener('start', function() {
+document.getElementById('sound').addEventListener('click', 
 function preload() {
-  bg1 = loadSound('background1.mp3');
+  bg1 = loadSound('sound/1/background.mp3');
   bg1.setVolume(0.05);
-  wind1 = loadSound('wind1.mp3');
-  wind2 = loadSound('wind2.mp3');
-  wind3 = loadSound('wind3.mp3');
+  wind1 = loadSound('sound/1/wind1.mp3');
+  wind2 = loadSound('sound/1/wind2.mp3');
+  wind3 = loadSound('sound/1/wind3.mp3');
   wind1.setVolume(0.3);
   wind2.setVolume(0.3);
   wind3.setVolume(0.3);
-  bg2 = loadSound('background2.mp3');
+  bg2 = loadSound('sound/2/background.mp3');
   bg2.setVolume(0.05);
-  bird1 = loadSound('bird1.mp3');
-  bird2 = loadSound('bird2.mp3');
-  bird3 = loadSound('bird3.mp3');
-  bg3 = loadSound('background3.mp3');
+  bird1 = loadSound('sound/2/bird1.mp3');
+  bird2 = loadSound('sound/2/bird2.mp3');
+  bird3 = loadSound('sound/2/bird3.mp3');
+  bg3 = loadSound('sound/3/background.mp3');
   bg3.setVolume(0.05);
-  music1 = loadSound('music1.mp3');
-  music2 = loadSound('music2.mp3');
-  music3 = loadSound('music3.mp3');
+  music1 = loadSound('sound/3/music1.mp3');
+  music2 = loadSound('sound/3/music2.mp3');
+  music3 = loadSound('sound/3/music3.mp3');
   music1.setVolume(0.3);
   music2.setVolume(0.3);
   music3.setVolume(0.3);
-}
-});
+  event.stopPropagation();
+}                                                 
+);
 
    document.getElementById('next').addEventListener('click', function() {
      switchLevel();});
@@ -112,25 +114,6 @@ function setuplevel0() {
 function setuplevel1() {
   createCanvas(600, 600);
   background(0);
-        // Add event listeners to the buttons
-  document.getElementById('buttonA').addEventListener('click', function() {
-      playWind('a');
-      playerSequence1.push('a');
-      drawRect1 = true;
-  });
-  document.getElementById('buttonS').addEventListener('click', function() {
-      playWind('s');
-      playerSequence1.push('s');
-      drawRect2 = true;
-  });
-  document.getElementById('buttonD').addEventListener('click', function() {
-      playWind('d');
-      playerSequence1.push('d');
-      drawRect3 = true;
-  });
-  document.getElementById('buttonB').addEventListener('click', function() {
-    replaySequence1();
-  });
 }
 
 function setuplevel2() {
@@ -152,15 +135,26 @@ function instruction() {
   // text("Click to continue!", width / 2, height / 2 + 25);
 }
 
+function instruction0() {
+  textAlign(CENTER);
+  fill(255);
+  textSize(15);
+  text("First press the button 'LoadSound' to load audios.", width / 2, height / 2 );
+  fill(150)
+  text("Then click the screen to continue!", width / 2, height / 2 + 25);
+}
 
 function drawlevel0() {
   background(0);
   
-  if (show == true){
-  textAlign(CENTER);
+  if (show0 == true){
+    instruction0();
+  } else{
+        textAlign(CENTER);
   fill(255);
   textSize(15);
-  text("Click to start.", width / 2, height / 2 );
+  text("I can sense you're not feeling your best right now.", width / 2, height / 2 );
+  text( "click 'Next' to the game.", width / 2, height / 2 + 25);        
   }
 }
 
@@ -253,9 +247,10 @@ function drawlevel3() {
     // Check if the player sequence is correct
     if (arraysEqual3()) {
       fill(0, 255, 0);
-      textSize(32);
+      textSize(20);
       textAlign(CENTER, CENTER);
-      text('You win!!', width / 2, height / 2);
+      text("Your melody resonates with nature's chorus!", width / 2, height / 2);
+      text("We're one step closer to the sanctuary!!", width / 2, height / 2 + 25);
     }
   }
 
@@ -450,9 +445,12 @@ function replaySequence3() {
 }
 
 function mouseClicked(){
-  if (currentLevel === 0) {
-    show = false;
+if (currentLevel === 0&&show0) {
+    if (!playing0) {
+    show0 = false;
   }
+}
+  
 if (currentLevel === 1) {
     if (!playing1) {
       playing1 = true;
@@ -491,47 +489,71 @@ if (currentLevel === 1) {
   }
 }
 
-function play() {
-    if (currentLevel === 1) {
-    if (!playing1) {
-      playing1 = true;
-      show1 = false;
-      if (!musicPlayed1) {
-        bg1.loop();
-        musicPlayed1 = true;
-      }
-    playerSequence1 = [];
-    playSequence1();
-    }
-  }
-  if (currentLevel === 2) {
-    if (!playing2) {
-      playing2 = true;
-      show2 = false;
-      if (!musicPlayed2) {
-        bg2.loop();
-        musicPlayed2 = true;
-      }
-    playerSequence2 = [];
-    playSequence2();
-    }
-  }
-  if (currentLevel === 3) {
-    if (!playing3) {
-      playing3 = true;
-      show3 = false;
-      if (!musicPlayed3) {
-        bg3.loop();
-        musicPlayed3 = true;
-      }
-      playerSequence3 = [];
-      playSequence3();
-    }
-  }
-}
+// function play() {
+//     if (currentLevel === 1) {
+//     if (!playing1) {
+//       playing1 = true;
+//       show1 = false;
+//       if (!musicPlayed1) {
+//         bg1.loop();
+//         musicPlayed1 = true;
+//       }
+//     playerSequence1 = [];
+//     playSequence1();
+//     }
+//   }
+//   if (currentLevel === 2) {
+//     if (!playing2) {
+//       playing2 = true;
+//       show2 = false;
+//       if (!musicPlayed2) {
+//         bg2.loop();
+//         musicPlayed2 = true;
+//       }
+//     playerSequence2 = [];
+//     playSequence2();
+//     }
+//   }
+//   if (currentLevel === 3) {
+//     if (!playing3) {
+//       playing3 = true;
+//       show3 = false;
+//       if (!musicPlayed3) {
+//         bg3.loop();
+//         musicPlayed3 = true;
+//       }
+//       playerSequence3 = [];
+//       playSequence3();
+//     }
+//   }
+// }
 
 function switchLevel() {
   currentLevel++;
+  
+  if (currentLevel === 1) {
+
+    // Add event listeners to the buttons
+  document.getElementById('buttonA').addEventListener('click', function() {
+      playWind('a');
+      playerSequence1.push('a');
+      drawRect1 = true;
+  });
+  document.getElementById('buttonS').addEventListener('click', function() {
+      playWind('s');
+      playerSequence1.push('s');
+      drawRect2 = true;
+  });
+  document.getElementById('buttonD').addEventListener('click', function() {
+      playWind('d');
+      playerSequence1.push('d');
+      drawRect3 = true;
+  });
+  document.getElementById('buttonB').addEventListener('click', function() {
+    replaySequence1();
+  });
+  }
+  
   if (currentLevel === 2) {
     bg1.stop();
     wind1.stop();
